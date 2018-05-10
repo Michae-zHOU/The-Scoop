@@ -1,0 +1,9 @@
+users:
+  dgadsga:
+    username: dgadsga
+    articleIds: []
+    commentIds: []
+articles: {}
+comments: {}
+nextArticleId: 1
+nextCommentId: 1

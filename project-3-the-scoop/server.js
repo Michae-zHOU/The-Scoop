@@ -44,8 +44,6 @@ const routes = {
   }
 };
 
-
-
 function getUser(url, request) {
   const username = url.split('/').filter(segment => segment)[1];
   const user = database.users[username];
@@ -109,17 +107,6 @@ function getArticles(url, request) {
   return response;
 }
 
-function getArticles(url, request) {
-  const response = {};
-
-  response.status = 200;
-  response.body = {
-    comments
-  };
-
-  return response;
-}
-
 function getArticle(url, request) {
   const id = Number(url.split('/').filter(segment => segment)[1]);
   const article = database.articles[id];
@@ -167,8 +154,6 @@ function createArticle(url, request) {
 
   return response;
 }
-
-
 
 function updateArticle(url, request) {
   const id = Number(url.split('/').filter(segment => segment)[1]);
@@ -251,11 +236,9 @@ function downvoteArticle(url, request) {
 }
 
 function upvote(item, username) {
-  
   if (item.downvotedBy.includes(username)) {
     item.downvotedBy.splice(item.downvotedBy.indexOf(username), 1);
   }
-  console.log('---2-');
   if (!item.upvotedBy.includes(username)) {
     item.upvotedBy.push(username);
   }
@@ -271,25 +254,6 @@ function downvote(item, username) {
   }
   return item;
 }
-
-
-/* function getComment(url, request) {
-  const id = Number(url.split('/').filter(segment => segment)[1]);
-  const comment = database.comments[id];
-  const response = {};
-
-  if(comment) {
-    response.body = {comment: comment};
-    response.status = 200;
-  } else if (id) {
-    response.status = 404;
-  } else {
-    response.status = 400;
-  }
-
-  return response;
-} */
-
 
 function createComment(url, request) {
   const requestComment = request.body && request.body.comment;
@@ -397,6 +361,27 @@ function downvoteComment(url, request) {
   }
 
   return response;
+}
+
+const yaml = require('js-yaml');
+const fs = require('fs');
+const DATABASE_YAML = 'database.yml';
+
+function loadDatabase() {
+  try{
+    if(fs.readFileSync(DATABASE_YAML).length != 0)
+      database = yaml.safeLoad(fs.readFileSync(DATABASE_YAML),'utf8');
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function saveDatabase() {
+  try{
+    fs.writeFileSync(DATABASE_YAML,yaml.safeDump(database));
+  } catch (e) {
+    console.log(e);
+  }
 }
 // Write all code above this line.
 
